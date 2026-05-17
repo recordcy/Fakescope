@@ -1,6 +1,3 @@
-"""
-train.py — 4차 시도: Midjourney + CSV 데이터셋 추가
-"""
 
 import argparse
 import os
