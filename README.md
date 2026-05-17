@@ -228,7 +228,11 @@ python web/app.py
 ```
 
 ---
+## 모델
 
+- Backbone: MobileNetV3 (torchvision 사전학습 모델 기반)
+- 논문: [Searching for MobileNetV3](https://arxiv.org/abs/1905.02244) (Howard et al., 2019)
+  
 ## 📚 참고 논문
 
 ### Wang et al., "CNN-generated images are surprisingly easy to spot... for now" (CVPR 2020)
