@@ -149,7 +149,7 @@ Wang et al. (CVPR 2020)에 따르면, AI 생성 이미지는 픽셀 공간에서
 
 ---
 
-### 4차 시도 — Fake 데이터 다양성 강화 (최종)
+### 4차 시도 — Fake 데이터 다양성 강화 
 
 **설정**:
 - Fake에 Midjourney 실사 스타일 AI 이미지 추가
@@ -160,7 +160,7 @@ Wang et al. (CVPR 2020)에 따르면, AI 생성 이미지는 픽셀 공간에서
 
 ---
 
-## 📊 Ablation Study
+##  Ablation Study
 
 | 모델 구성 | Val Accuracy | 비고 |
 |---------|-------------|------|
@@ -231,7 +231,7 @@ python web/app.py
 ```
 
 ---
- ## 📄 라이선스
+ ## 라이센스
 
 ### 데이터셋
 - **140k Real and Fake Faces**: 연구용 공개 (Flickr + StyleGAN 기반)
