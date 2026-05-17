@@ -254,7 +254,7 @@ python web/app.py
 - Wang et al., "CNN-generated images are surprisingly easy to spot... for now" (CVPR 2020)
   - [arxiv](https://arxiv.org/abs/1912.11035)
  
-모델의 판단 근거 시각화를 위해 GradCAM 기법을 적용했습니다 (`src/gradcam.py`).
+  모델의 판단 근거 시각화를 위해 GradCAM 기법을 적용했습니다 (`src/gradcam.py`).
 ---
 
 ## requirements.txt
