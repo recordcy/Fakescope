@@ -9,7 +9,7 @@ EfficientNet-B4 대신 MobileNetV3를 쓰는 이유:
     - 파라미터 수: EfficientNet-B4 약 19M → MobileNetV3 약 5.4M
     - 추론 속도 약 3배 빠름
     - Colab 무료 메모리(12GB) 안에서 batch_size=32 안정적으로 돌아감
-    - 정확도 차이: 약 2~3% (텀프로젝트 수준에서 충분)
+    - 정확도 차이: 약 2~3% 
 """
 
 import torch
