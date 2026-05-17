@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FakeScope — AI 이미지 탐지기</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #09090e;
+      --surface:  #111117;
+      --border:   #252535;
+      --accent:   #00ff88;
+      --danger:   #ff3c5a;
+      --text:     #c8c8d8;
+      --dim:      #44445a;
+      --mono:     'Share Tech Mono', monospace;
+      --sans:     'Syne', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+    }
+
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,255,136,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,255,136,.025) 1px, transparent 1px);
+      background-size: 44px 44px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page {
+      position: relative; z-index: 1;
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 52px 24px 100px;
+    }
+
+    /* ── 헤더 ── */
+    header { margin-bottom: 52px; animation: fadeDown .5s ease both; }
+
+    .logo {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      letter-spacing: -.03em;
+      color: #fff;
+      line-height: 1;
+    }
+    .logo em { color: var(--accent); font-style: normal; }
+
+    .subtitle {
+      font-family: var(--mono);
+      font-size: .72rem;
+      color: var(--dim);
+      letter-spacing: .12em;
+      margin-top: 10px;
+    }
+
+    /* ── 섹션 레이블 ── */
+    .sec-label {
+      font-family: var(--mono);
+      font-size: .68rem;
+      letter-spacing: .18em;
+      color: var(--dim);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .sec-label::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+
+    /* ── 메인 영역 (업로드 존 / 결과 화면 전환) ── */
+    #main-zone {
+      position: relative;
+      min-height: 320px;
+    }
+
+    /* ── 업로드 존 ── */
+    #drop-zone {
+      border: 1.5px dashed var(--border);
+      padding: 80px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      animation: fadeUp .5s .05s ease both;
+    }
+    #drop-zone:hover, #drop-zone.over {
+      border-color: var(--accent);
+      background: rgba(0,255,136,.03);
+    }
+
+    .drop-icon { font-size: 2.6rem; display: block; margin-bottom: 18px; }
+    .drop-hint {
+      font-family: var(--mono);
+      font-size: .8rem;
+      color: var(--dim);
+      line-height: 2;
+    }
+    .drop-hint strong {
+      color: var(--accent);
+      display: block;
+      font-size: .95rem;
+    }
+
+    #file-input { display: none; }
+
+    /* ── 결과 영역 (업로드 존 자리를 대체) ── */
+    #result-zone {
+      display: none;
+      animation: fadeUp .4s ease both;
+    }
+
+    /* 이미지 그리드 */
+    .img-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 560px) { .img-grid { grid-template-columns: 1fr; } }
+
+    .img-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14px;
+    }
+    .img-card-label {
+      font-family: var(--mono);
+      font-size: .65rem;
+      color: var(--dim);
+      letter-spacing: .12em;
+      margin-bottom: 10px;
+    }
+    .img-card img {
+      width: 100%; height: 260px;
+      object-fit: contain;
+      background: #000;
+      display: block;
+    }
+
+    /* 판정 결과 */
+    .verdict-row {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      margin-bottom: 24px;
+    }
+    .verdict {
+      font-family: var(--sans);
+      font-weight: 800;
+      font-size: clamp(2.4rem, 7vw, 4rem);
+      letter-spacing: -.03em;
+      line-height: 1;
+    }
+    .verdict.real { color: var(--accent); }
+    .verdict.fake { color: var(--danger); }
+
+    .conf-badge {
+      font-family: var(--mono);
+      font-size: .78rem;
+      padding: 5px 11px;
+      border: 1px solid currentColor;
+    }
+    .conf-badge.real { color: var(--accent); }
+    .conf-badge.fake { color: var(--danger); }
+
+    /* 확률 바 */
+    .prob-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-family: var(--mono);
+      font-size: .75rem;
+    }
+    .prob-lbl { width: 38px; color: var(--dim); letter-spacing: .08em; }
+    .prob-track {
+      flex: 1; height: 5px;
+      background: var(--border);
+      overflow: hidden;
+    }
+    .prob-fill {
+      height: 100%;
+      width: 0%;
+      transition: width .9s cubic-bezier(.16,1,.3,1);
+    }
+    .prob-fill.real { background: var(--accent); }
+    .prob-fill.fake { background: var(--danger); }
+    .prob-val { width: 44px; text-align: right; }
+
+    /* 다시 분석 버튼 */
+    .btn-reset {
+      margin-top: 32px;
+      padding: 11px 24px;
+      background: transparent;
+      color: var(--dim);
+      font-family: var(--mono);
+      font-size: .75rem;
+      letter-spacing: .1em;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: color .15s, border-color .15s;
+    }
+    .btn-reset:hover { color: var(--text); border-color: var(--dim); }
+
+    /* ── 로딩 (업로드 존 자리에 표시) ── */
+    #loading {
+      display: none;
+      border: 1.5px dashed var(--border);
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .scan-track {
+      width: 60%; height: 2px;
+      background: var(--border);
+      overflow: hidden;
+      margin: 0 auto 18px;
+    }
+    .scan-track::after {
+      content: ''; display: block;
+      height: 100%; width: 38%;
+      background: var(--accent);
+      animation: scan 1.1s linear infinite;
+    }
+    @keyframes scan {
+      0%   { transform: translateX(-120%); }
+      100% { transform: translateX(380%); }
+    }
+    .loading-msg {
+      font-family: var(--mono);
+      font-size: .75rem;
+      color: var(--dim);
+      letter-spacing: .1em;
+    }
+
+    /* ── 애니메이션 ── */
+    @keyframes fadeDown {
+      from { opacity:0; transform:translateY(-14px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(14px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- 헤더 -->
+  <header>
+    <h1 class="logo">Fake<em>Scope</em></h1>
+    <p class="subtitle">AI-GENERATED IMAGE DETECTOR · MobileNetV3 + FFT ANALYSIS</p>
+  </header>
+
+  <div class="sec-label" id="zone-label">INPUT IMAGE</div>
+
+  <div id="main-zone">
+
+    <!-- 업로드 존 -->
+    <div id="drop-zone">
+      <span class="drop-icon">🔬</span>
+      <div class="drop-hint">
+        <strong>이미지를 드래그하거나 클릭해서 업로드</strong>
+        JPG · PNG · WEBP 지원
+      </div>
+      <input type="file" id="file-input" accept="image/*">
+    </div>
+
+    <!-- 로딩 (업로드 존 자리 대체) -->
+    <div id="loading">
+      <div class="scan-track"></div>
+      <div class="loading-msg">SCANNING · RUNNING INFERENCE...</div>
+    </div>
+
+    <!-- 결과 (업로드 존 자리 대체) -->
+    <div id="result-zone">
+
+      <!-- 이미지: 원본 + GradCAM -->
+      <div class="img-grid">
+        <div class="img-card">
+          <div class="img-card-label">ORIGINAL</div>
+          <img id="orig-img" src="" alt="원본">
+        </div>
+        <div class="img-card" id="cam-card" style="display:none">
+          <div class="img-card-label">GRADCAM — 모델 주목 영역</div>
+          <img id="cam-img" src="" alt="GradCAM">
+        </div>
+      </div>
+
+      <!-- 판정 -->
+      <div class="sec-label">RESULT</div>
+
+      <div class="verdict-row">
+        <div class="verdict" id="verdictText"></div>
+        <div class="conf-badge" id="confBadge"></div>
+      </div>
+
+      <div class="prob-row">
+        <span class="prob-lbl">REAL</span>
+        <div class="prob-track"><div class="prob-fill real" id="realBar"></div></div>
+        <span class="prob-val" id="realVal"></span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-lbl">FAKE</span>
+        <div class="prob-track"><div class="prob-fill fake" id="fakeBar"></div></div>
+        <span class="prob-val" id="fakeVal"></span>
+      </div>
+
+      <button class="btn-reset" id="resetBtn">↩ 다시 분석하기</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const dropZone   = document.getElementById('drop-zone');
+  const fileInput  = document.getElementById('file-input');
+  const loading    = document.getElementById('loading');
+  const resultZone = document.getElementById('result-zone');
+  const origImg    = document.getElementById('orig-img');
+  const camCard    = document.getElementById('cam-card');
+  const camImg     = document.getElementById('cam-img');
+  const resetBtn   = document.getElementById('resetBtn');
+  const zoneLabel  = document.getElementById('zone-label');
+
+  let selectedFile = null;
+
+  /* ── 상태 전환 헬퍼 ── */
+  function showZone(zone) {
+    dropZone.style.display  = zone === 'upload'  ? 'block' : 'none';
+    loading.style.display   = zone === 'loading' ? 'block' : 'none';
+    resultZone.style.display= zone === 'result'  ? 'block' : 'none';
+  }
+
+  /* ── 파일 선택 → 바로 분석 ── */
+  dropZone.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+
+  dropZone.addEventListener('dragover', e => {
+    e.preventDefault(); dropZone.classList.add('over');
+  });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault(); dropZone.classList.remove('over');
+    handleFile(e.dataTransfer.files[0]);
+  });
+
+  function handleFile(file) {
+    if (!file || !file.type.startsWith('image/')) return;
+    selectedFile = file;
+
+    // 원본 이미지 미리 읽기
+    const reader = new FileReader();
+    reader.onload = ev => {
+      origImg.src = ev.target.result;
+      camCard.style.display = 'none';
+      analyze();  // 파일 선택 즉시 분석 시작
+    };
+    reader.readAsDataURL(file);
+  }
+
+  /* ── 분석 ── */
+  async function analyze() {
+    zoneLabel.textContent = 'ANALYZING';
+    showZone('loading');
+
+    const form = new FormData();
+    form.append('image', selectedFile);
+
+    try {
+      const res  = await fetch('/predict', { method: 'POST', body: form });
+      const data = await res.json();
+
+      if (data.error) {
+        alert('오류: ' + data.error);
+        showZone('upload');
+        zoneLabel.textContent = 'INPUT IMAGE';
+        return;
+      }
+
+      showResult(data);
+    } catch (err) {
+      alert('서버 오류: ' + err.message);
+      showZone('upload');
+      zoneLabel.textContent = 'INPUT IMAGE';
+    }
+  }
+
+  /* ── 결과 표시 ── */
+  function showResult(data) {
+    const isReal = data.label === 'Real';
+    const cls    = isReal ? 'real' : 'fake';
+
+    document.getElementById('verdictText').textContent = data.label.toUpperCase();
+    document.getElementById('verdictText').className   = 'verdict ' + cls;
+    document.getElementById('confBadge').textContent   = (data.confidence * 100).toFixed(1) + '% 확신';
+    document.getElementById('confBadge').className     = 'conf-badge ' + cls;
+
+    setTimeout(() => {
+      document.getElementById('realBar').style.width = (data.real_prob * 100) + '%';
+      document.getElementById('fakeBar').style.width = (data.fake_prob * 100) + '%';
+      document.getElementById('realVal').textContent = (data.real_prob * 100).toFixed(1) + '%';
+      document.getElementById('fakeVal').textContent = (data.fake_prob * 100).toFixed(1) + '%';
+    }, 50);
+
+    if (data.gradcam_b64) {
+      camImg.src            = 'data:image/jpeg;base64,' + data.gradcam_b64;
+      camCard.style.display = 'block';
+    }
+
+    zoneLabel.textContent = 'RESULT';
+    showZone('result');
+  }
+
+  /* ── 리셋 ── */
+  resetBtn.addEventListener('click', () => {
+    selectedFile = null;
+    fileInput.value = '';
+    origImg.src = '';
+    camImg.src  = '';
+    camCard.style.display = 'none';
+    document.getElementById('realBar').style.width = '0%';
+    document.getElementById('fakeBar').style.width = '0%';
+    zoneLabel.textContent = 'INPUT IMAGE';
+    showZone('upload');
+  });
+</script>
+</body>
+</html>
