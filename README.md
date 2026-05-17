@@ -95,22 +95,22 @@ Wang et al. (CVPR 2020)에 따르면, AI 생성 이미지는 픽셀 공간에서
 
 ### Real(0) — 사람이 만든 이미지
 
-| 데이터셋 | 출처 | 규모 | 라이선스 |
-|---------|------|------|---------|
-| 140k Real and Fake Faces (real) | [Kaggle](https://www.kaggle.com/datasets/xhlulu/140k-real-and-fake-faces) | ~50,000장 (균형 조정) | 연구용 공개 |
-| Pixiv AI/Real Illustration (illust) | [Kaggle](https://www.kaggle.com/datasets/tagamit/pixiv-aireal-art) | ~1,248장 | 연구용 공개 |
-| Intel Image Classification | [Kaggle](https://www.kaggle.com/datasets/puneet6060/intel-image-classification) | ~14,034장 | 연구용 공개 |
-| MS COCO 2017 (샘플링) | [cocodataset.org](https://cocodataset.org) | 10,000장 | CC BY 4.0 |
+| 데이터셋 | 출처 | 규모 | 
+|---------|------|------|
+| 140k Real and Fake Faces (real) | [Kaggle](https://www.kaggle.com/datasets/xhlulu/140k-real-and-fake-faces) | ~50,000장 (균형 조정) | 
+| Pixiv AI/Real Illustration (illust) | [Kaggle](https://www.kaggle.com/datasets/tagamit/pixiv-aireal-art) | ~1,248장 | 
+| Intel Image Classification | [Kaggle](https://www.kaggle.com/datasets/puneet6060/intel-image-classification) | ~14,034장 | 
+| MS COCO 2017 (샘플링) | [cocodataset.org](https://cocodataset.org) | 10,000장 |
 
 ### Fake(1) — AI가 생성한 이미지
 
-| 데이터셋 | 출처 | 규모 | 라이선스 |
-|---------|------|------|---------|
-| 140k Real and Fake Faces (fake) | [Kaggle](https://www.kaggle.com/datasets/xhlulu/140k-real-and-fake-faces) | ~50,000장 (균형 조정) | 연구용 공개 |
-| Pixiv AI/Real Illustration (ai) | [Kaggle](https://www.kaggle.com/datasets/tagamit/pixiv-aireal-art) | ~1,559장 | 연구용 공개 |
-| AI Generated Images | [Kaggle](https://www.kaggle.com/datasets/aloktantrik/a-dataset-of-34500-labeled-images) | 11,300장 | MIT License |
-| Midjourney Images | [Kaggle](https://www.kaggle.com/datasets/cyanex1702/midjourney-imagesprompt) | ~2,155장 | 연구용 공개 |
-| AI vs Human Generated (fake only) | [Kaggle](https://www.kaggle.com/datasets/alessandrasala79/ai-vs-human-generated-dataset) | ~27,982장 | 연구용 공개 |
+| 데이터셋 | 출처 | 규모 | 
+|---------|------|------|
+| 140k Real and Fake Faces (fake) | [Kaggle](https://www.kaggle.com/datasets/xhlulu/140k-real-and-fake-faces) | ~50,000장 (균형 조정) | 
+| Pixiv AI/Real Illustration (ai) | [Kaggle](https://www.kaggle.com/datasets/tagamit/pixiv-aireal-art) | ~1,559장 | 
+| AI Generated Images | [Kaggle](https://www.kaggle.com/datasets/aloktantrik/a-dataset-of-34500-labeled-images) | 11,300장 |
+| Midjourney Images | [Kaggle](https://www.kaggle.com/datasets/cyanex1702/midjourney-imagesprompt) | ~2,155장 | 
+| AI vs Human Generated (fake only) | [Kaggle](https://www.kaggle.com/datasets/alessandrasala79/ai-vs-human-generated-dataset) | ~27,982장 | 
 
 ---
 
@@ -240,6 +240,13 @@ python web/app.py
 
 모델의 판단 근거 시각화를 위해 GradCAM 기법을 적용했습니다 (`src/gradcam.py`).
 
+## 라이선스
+- Pixiv AI/Real Illustration: CC BY-NC-SA 4.0 (비상업적 용도)
+- MS COCO: CC BY 4.0
+- AI vs Human Generated: Apache 2.0
+- Midjourney Images: MIT License
+- 그 외: 연구용 공개 데이터셋
+  
 ---
 
 ## requirements.txt
