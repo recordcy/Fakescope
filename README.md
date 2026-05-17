@@ -228,25 +228,30 @@ python web/app.py
 ```
 
 ---
-## 모델
+ ## 📄 라이선스
 
-- Backbone: MobileNetV3 (torchvision 사전학습 모델 기반)
-  
-## 참고 논문
+### 데이터셋
+- **140k Real and Fake Faces**: 연구용 공개 (Flickr + StyleGAN 기반)
+- **Pixiv AI/Real Illustration**: CC BY-NC-SA 4.0 (비상업적 용도)
+- **Intel Image Classification**: © Original Authors, 연구용
+- **MS COCO 2017**: CC BY 4.0
+- **AI Generated Images**: Open Database License (ODbL)
+- **Midjourney Images**: MIT License
+- **AI vs Human Generated**: Apache 2.0
 
+### 모델
+- **MobileNetV3**: BSD 3-Clause License (torchvision)
+  - Howard et al., "Searching for MobileNetV3" (ICCV 2019)
+
+### 참고 논문
 ### Wang et al., "CNN-generated images are surprisingly easy to spot... for now" (CVPR 2020)
 - **핵심 아이디어**: AI 생성 이미지는 주파수 도메인(FFT)에서 특유의 격자 패턴이 나타난다는 것을 실험적으로 입증
 - **본 프로젝트 활용**: 이 논문의 인사이트를 바탕으로 Frequency Branch를 설계. RGB 특징만 사용하는 것이 아니라 FFT magnitude spectrum을 CNN으로 분석하는 구조를 추가했으며, Ablation Study를 통해 주파수 특징 추가 시 정확도가 실제로 향상됨을 확인
 
 모델의 판단 근거 시각화를 위해 GradCAM 기법을 적용했습니다 (`src/gradcam.py`).
 
-## 라이선스
-- Pixiv AI/Real Illustration: CC BY-NC-SA 4.0 (비상업적 용도)
-- MS COCO: CC BY 4.0
-- AI vs Human Generated: Apache 2.0
-- Midjourney Images: MIT License
-- 그 외: 연구용 공개 데이터셋
-  
+- Wang et al., "CNN-generated images are surprisingly easy to spot... for now" (CVPR 2020)
+  - [arxiv](https://arxiv.org/abs/1912.11035)
 ---
 
 ## requirements.txt
