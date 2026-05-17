@@ -231,7 +231,6 @@ python web/app.py
 ## 모델
 
 - Backbone: MobileNetV3 (torchvision 사전학습 모델 기반)
-- 논문: [Searching for MobileNetV3](https://arxiv.org/abs/1905.02244) (Howard et al., 2019)
   
 ## 📚 참고 논문
 
