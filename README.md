@@ -85,7 +85,7 @@ fakescope/
 
 ### 왜 주파수 분석을 추가했나?
 
-Wang et al. (CVPR 2020)에 따르면, AI 생성 이미지는 픽셀 공간에서는 사실적으로 보여도 **주파수 도메인(FFT)에서 특유의 격자 패턴(grid artifact)**이 나타납니다. 이 Frequency Branch가 그 패턴을 학습합니다.
+Wang et al. (CVPR 2020)에 따르면, AI 생성 이미지는 픽셀 공간에서는 사실적으로 보여도 주파수 도메인(FFT)에서 특유의 격자 패턴(grid artifact)이 나타납니다. 이 Frequency Branch가 그 패턴을 학습합니다.
 
 ---
 
@@ -217,7 +217,7 @@ pip install -r requirements.txt
 
 ### 2. Colab에서 학습
 
-`FakeScope_Train.ipynb`를 Colab에 업로드 후 A100 GPU 선택, 순서대로 실행.
+`FakeScope_Train.ipynb`를 Colab에 업로드 후 GPU 선택, 순서대로 실행.
 완료 후 `best_model.pth`를 로컬 `weights/` 폴더에 저장.
 
 ### 3. 웹 서버 실행
