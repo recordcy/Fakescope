@@ -219,6 +219,9 @@ pip install -r requirements.txt
 
 `FakeScope_Train.ipynb`를 Colab에 업로드 후 GPU 선택, 순서대로 실행.
 완료 후 `best_model.pth`를 로컬 `weights/` 폴더에 저장.
+혹은 
+1. [가중치 다운로드](https://drive.google.com/file/d/1bFk9ie5HRfIBlUnj89JJWs9BHSX3srp0/view?usp=drive_link)
+2. `weights/` 폴더에 넣기
 
 ### 3. 웹 서버 실행
 
