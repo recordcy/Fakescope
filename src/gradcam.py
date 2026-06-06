@@ -3,8 +3,6 @@ gradcam.py
 ----------
 GradCAM: 모델이 이미지의 어느 영역을 보고 판단했는지 히트맵으로 표시.
 
-발표 때 "왜 Fake냐?" 를 시각적으로 설명하는 핵심 도구입니다.
-
 동작 원리:
     1. 지정 레이어의 feature map을 forward hook으로 저장
     2. 해당 클래스에 대한 gradient를 backward hook으로 저장
