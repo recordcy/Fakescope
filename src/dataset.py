@@ -1,26 +1,3 @@
-"""
-dataset.py
-----------
-4차 시도 — Fake 데이터 다양성 강화
-
-Real(0):
-  ① 140k 얼굴 real
-  ② Pixiv illust
-  ③ Intel Image Classification
-  ④ COCO 10,000장
-
-Fake(1):
-  ① 140k 얼굴 fake
-  ② Pixiv ai
-  ③ AI Generated Images (11,300장)
-  ④ Midjourney Images (신규) ← 실사 스타일 AI 이미지
-  ⑤ AI vs Human (CSV, 신규) ← 다양한 실사 AI 이미지
-
-핵심 변경:
-  - Fake에 실사 스타일 AI 이미지 대폭 추가
-  - Midjourney: 숫자 폴더 구조 → 재귀 수집
-  - alessandrasala79: CSV 파싱으로 fake만 추출
-"""
 
 import csv
 import io
